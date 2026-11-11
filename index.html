@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-yM6fLYqJNnVABIs2OaC3+OYWTKHWmsLXD2bex94iyDs='">
+<meta name="robots" content="noindex">
+<title>Zurück zu Finanzen</title>
+<style>
+  :root { color-scheme: light dark; --bg: #faf8f4; --fg: #1b1c1a; --muted: #5e625f; --accent: #3d6b55; --on-accent: #fff; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #171a18; --fg: #e3e3df; --muted: #a9ada9; --accent: #8fc1a5; --on-accent: #0f2a1d; } }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--bg); color: var(--fg);
+         font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 26rem; padding: 2rem 1rem; text-align: center; }
+  h1 { font-size: 1.4rem; margin: 0 0 .5rem; }
+  p { color: var(--muted); margin: 0 0 1.5rem; }
+  a.button { display: inline-block; padding: .8rem 1.6rem; border-radius: 999px; background: var(--accent); color: var(--on-accent);
+             text-decoration: none; font-weight: 600; }
+  [hidden] { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">Zurück zur App …</h1>
+  <p id="text">Falls die App nicht von selbst aufgeht, tippe auf den Knopf.</p>
+  <a id="open" class="button" href="#" hidden>Finanzen öffnen</a>
+</main>
+<script>
+// Forwards the bank's redirect (code, state or error) unchanged to the app.
+// Nothing is stored or sent anywhere else.
+(function () {
+  var query = window.location.search.replace(/^\?/, "");
+  var link = document.getElementById("open");
+  if (!query) {
+    document.getElementById("title").textContent = "Finanzen";
+    document.getElementById("text").textContent = "Diese Seite leitet nach der Freigabe bei der Bank zurück in die App.";
+    return;
+  }
+  var target = "intent://callback?" + query + "#Intent;scheme=finanzen;package=app.finanzen;end";
+  link.href = target;
+  link.hidden = false;
+  // Keep the one-time code out of the browser history.
+  history.replaceState(null, "", window.location.pathname);
+  window.location.replace(target);
+})();
+</script>
+</body>
+</html>
